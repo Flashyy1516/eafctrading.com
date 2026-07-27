@@ -15,6 +15,7 @@
     />
     <meta property="og:type" content="website" />
     <link rel="icon" href="../public/favicon.svg" />
+    <script src="https://sellauth.com/assets/js/sellauth-embed-2.js"></script>
     <style>
       :root {
         --primary: #facc15;
@@ -1679,7 +1680,7 @@
           <div class="heading center">
             <p class="section-label">Memberships</p>
             <h2>Choose Your Membership</h2>
-            <p>Pick the access that suits your routine. Prices and checkout links are easy to change inside this file.</p>
+            <p>Pick the access that suits your routine. Prices and SellAuth product details are easy to change inside this file.</p>
           </div>
           <div class="pricing" id="pricing"></div>
           <div class="notice" id="checkoutNotice"></div>
@@ -1750,9 +1751,23 @@
 
     <script>
       const config = {
-        stripeMonthlyUrl: "",
-        stripeQuarterlyUrl: "",
-        stripeAnnualUrl: "",
+        sellauth: {
+          shopId: "",
+          products: {
+            monthly: {
+              productId: "",
+              variantId: ""
+            },
+            quarterly: {
+              productId: "",
+              variantId: ""
+            },
+            annual: {
+              productId: "",
+              variantId: ""
+            }
+          }
+        },
         socials: {
           instagram: "https://www.instagram.com/eafc__trading?igsh=MWc0bXNwcWkwYmlrbQ==",
           tiktok: "http://www.tiktok.com/@topleveltrading",
@@ -1772,9 +1787,9 @@
       ];
 
       const plans = [
-        ["1 Month Pass", "&pound;9.99", "/ month", "", "Start 1 Month", "stripeMonthlyUrl", ["1 on 1 trading advice", "Over 70 trading guides", "Calls from experienced traders", "Premium-only giveaways", "Market trend updates"]],
-        ["3 Month Pass", "&pound;23.99", "/ 3 months", "", "Choose 3 Months", "stripeQuarterlyUrl", ["Everything in 1 Month", "Better value pass access", "Early market trend looks", "Premium-only giveaways", "Community support"]],
-        ["12 Month Pass", "&pound;44.99", "/ year", "Most Popular", "Choose 12 Months", "stripeAnnualUrl", ["Everything in 3 Months", "Best yearly value", "Long-term access to guides", "Calls from experienced traders", "Premium-only giveaways"]]
+        ["1 Month Pass", "&pound;9.99", "/ month", "", "Start 1 Month", "monthly", ["1 on 1 trading advice", "Over 70 trading guides", "Calls from experienced traders", "Premium-only giveaways", "Market trend updates"]],
+        ["3 Month Pass", "&pound;23.99", "/ 3 months", "", "Choose 3 Months", "quarterly", ["Everything in 1 Month", "Better value pass access", "Early market trend looks", "Premium-only giveaways", "Community support"]],
+        ["12 Month Pass", "&pound;44.99", "/ year", "Most Popular", "Choose 12 Months", "annual", ["Everything in 3 Months", "Best yearly value", "Long-term access to guides", "Calls from experienced traders", "Premium-only giveaways"]]
       ];
 
       const reviews = [
@@ -1804,7 +1819,7 @@
         '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15Z" stroke="currentColor" stroke-width="2"/><path d="M8 7h8M8 11h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
       ];
       document.getElementById("features").innerHTML = features.map(([title, text], index) => `<article class="card feature-card"><span class="icon-box">${featureIcons[index]}</span><div><h3>${title}</h3><p>${text}</p></div></article>`).join("");
-      document.getElementById("pricing").innerHTML = plans.map(([name, price, cadence, badge, button, urlKey, items]) => `<article class="price-card ${badge ? "popular" : ""}">${badge ? `<span class="popular-badge">${badge}</span>` : ""}<h3>${name}</h3><p class="price">${price} <small>${cadence}</small></p><ul class="features-list">${items.map(item => `<li><span style="color:var(--primary);font-weight:950">+</span> <span>${item}</span></li>`).join("")}</ul><button class="btn ${badge ? "btn-primary" : "btn-secondary"}" data-checkout="${urlKey}" data-plan="${name}">${button}</button></article>`).join("");
+      document.getElementById("pricing").innerHTML = plans.map(([name, price, cadence, badge, button, productKey, items]) => `<article class="price-card ${badge ? "popular" : ""}">${badge ? `<span class="popular-badge">${badge}</span>` : ""}<h3>${name}</h3><p class="price">${price} <small>${cadence}</small></p><ul class="features-list">${items.map(item => `<li><span style="color:var(--primary);font-weight:950">+</span> <span>${item}</span></li>`).join("")}</ul><button type="button" class="sellauth-button btn ${badge ? "btn-primary" : "btn-secondary"}" data-sellauth-product="${productKey}" data-plan="${name}">${button}</button></article>`).join("");
       document.getElementById("reviewsGrid").innerHTML = reviews.map(([name, type, initials, avatar, text]) => `<article class="card review-card"><div class="stars">★★★★★</div><p class="review-text">“${text}”</p><div class="reviewer"><span class="avatar">${avatar ? `<img src="${avatar}" alt="${name} avatar" loading="lazy" />` : initials}</span><div><h3 style="margin:0">${name}</h3><p style="margin:3px 0 0">${type}</p></div><span class="verified">Verified</span></div></article>`).join("");
       document.getElementById("faqList").innerHTML = faqs.map(([q, a], i) => `<div class="faq-item ${i === 0 ? "open" : ""}"><button class="faq-q" aria-expanded="${i === 0 ? "true" : "false"}"><span>${q}</span><span class="chevron">⌄</span></button><div class="faq-a">${a}</div></div>`).join("");
 
@@ -1828,16 +1843,32 @@
         img.addEventListener("error", () => document.querySelector(".hero").classList.remove("has-logo"));
       });
 
-      document.querySelectorAll("[data-checkout]").forEach(button => {
+      document.querySelectorAll("[data-sellauth-product]").forEach(button => {
         button.addEventListener("click", () => {
-          const url = config[button.dataset.checkout];
-          if (url) {
-            window.location.href = url;
-          } else {
-            const notice = document.getElementById("checkoutNotice");
-            notice.textContent = `${button.dataset.plan} checkout is not configured yet. Add the Stripe URL in the config at the bottom of this HTML file.`;
+          const notice = document.getElementById("checkoutNotice");
+          const product = config.sellauth.products[button.dataset.sellauthProduct];
+          if (!config.sellauth.shopId || !product?.productId || !product?.variantId) {
+            notice.textContent = `${button.dataset.plan} checkout is not configured yet. Add the SellAuth shopId, productId and variantId in the config at the bottom of this HTML file.`;
             notice.classList.add("show");
+            return;
           }
+
+          if (!window.sellAuthEmbed?.checkout) {
+            notice.textContent = "SellAuth checkout could not load yet. Check the embed script or your internet connection, then try again.";
+            notice.classList.add("show");
+            return;
+          }
+
+          notice.classList.remove("show");
+          window.sellAuthEmbed.checkout(button, {
+            cart: [{
+              productId: Number(product.productId),
+              variantId: Number(product.variantId),
+              quantity: 1
+            }],
+            shopId: Number(config.sellauth.shopId),
+            modal: true
+          });
         });
       });
 
