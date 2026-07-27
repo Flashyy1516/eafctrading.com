@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Top Level Trading | Trading Education Community</title>
     <meta
       name="description"
@@ -31,6 +31,12 @@
 
       * {
         box-sizing: border-box;
+      }
+
+      *,
+      *::before,
+      *::after {
+        min-width: 0;
       }
 
       html {
@@ -496,7 +502,7 @@
 
       .split {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         align-items: center;
         gap: 52px;
       }
@@ -521,16 +527,107 @@
       }
 
       .cards-3 {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
       .cards-6,
       .reviews {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
       .reviews {
         align-items: stretch;
+      }
+
+      .sneak-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 34px;
+        margin-top: 46px;
+      }
+
+      .tip-card {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012)), var(--card);
+      }
+
+      .tip-card.sell-call {
+        border-color: rgba(250, 204, 21, 0.82);
+        box-shadow:
+          0 0 0 1px rgba(255, 228, 92, 0.12),
+          0 0 72px rgba(250, 204, 21, 0.28),
+          inset 0 0 28px rgba(250, 204, 21, 0.05);
+      }
+
+      .tip-card.sell-call::before {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        z-index: 0;
+        background:
+          radial-gradient(circle at 50% 100%, rgba(250, 204, 21, 0.2), transparent 42%),
+          linear-gradient(180deg, rgba(250, 204, 21, 0.05), transparent 38%);
+        pointer-events: none;
+      }
+
+      .tip-card.sell-call > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .tip-image {
+        aspect-ratio: 16 / 10;
+        background: #090909;
+        overflow: hidden;
+      }
+
+      .tip-image img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+      }
+
+      .tip-body {
+        padding: 24px;
+      }
+
+      .tip-tag {
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid rgba(250, 204, 21, 0.35);
+        border-radius: 999px;
+        padding: 7px 11px;
+        color: var(--primary);
+        font-size: 11px;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+
+      .tip-body h3 {
+        margin-top: 16px;
+        font-size: 26px;
+        line-height: 1.12;
+        font-weight: 950;
+      }
+
+      .tip-lines {
+        display: grid;
+        gap: 9px;
+        margin-top: 18px;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      .tip-result {
+        margin-top: 18px;
+        color: var(--primary);
+        font-size: 32px;
+        font-weight: 950;
       }
 
       .card {
@@ -586,7 +683,7 @@
       .steps {
         position: relative;
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 22px;
         margin-top: 46px;
       }
@@ -627,7 +724,7 @@
 
       .pricing {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 22px;
         margin-top: 46px;
       }
@@ -1030,10 +1127,11 @@
         .cards-3,
         .cards-6,
         .reviews,
+        .sneak-grid,
         .pricing,
         .steps,
         .footer-grid {
-          grid-template-columns: repeat(2, 1fr);
+          grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
         .steps::before {
@@ -1151,6 +1249,7 @@
         .cards-3,
         .cards-6,
         .reviews,
+        .sneak-grid,
         .pricing,
         .steps,
         .footer-grid,
@@ -1174,8 +1273,17 @@
         }
 
         .card,
-        .price-card {
+        .price-card,
+        .tip-body {
           padding: 22px;
+        }
+
+        .tip-body h3 {
+          font-size: 23px;
+        }
+
+        .tip-result {
+          font-size: 28px;
         }
 
         .feature-card {
@@ -1298,9 +1406,49 @@
       }
 
       @media (max-width: 640px) {
+        html,
+        body {
+          max-width: 100%;
+          overflow-x: clip;
+        }
+
+        body {
+          position: relative;
+        }
+
         body {
           background-attachment: scroll;
           background-size: auto, 210px 181.865px;
+        }
+
+        main,
+        section,
+        .footer {
+          max-width: 100%;
+          overflow-x: clip;
+        }
+
+        .container,
+        .hero-grid {
+          width: min(calc(100% - 32px), 430px);
+          max-width: 430px;
+          margin-inline: auto;
+        }
+
+        .nav {
+          top: 8px;
+          right: 0;
+          left: 0;
+          padding: 0 max(10px, env(safe-area-inset-right)) 0 max(10px, env(safe-area-inset-left));
+        }
+
+        .nav-inner {
+          width: 100%;
+          max-width: 100%;
+          margin: 0;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
         }
 
         .brand-note {
@@ -1319,6 +1467,38 @@
 
         .statement-panel p {
           font-size: 24px;
+        }
+
+        .split,
+        .cards-3,
+        .cards-6,
+        .reviews,
+        .sneak-grid,
+        .pricing,
+        .steps,
+        .footer-grid {
+          grid-template-columns: minmax(0, 1fr);
+        }
+
+        .card,
+        .price-card,
+        .tip-card,
+        .statement-panel,
+        .cta {
+          width: 100%;
+          max-width: 100%;
+        }
+
+        .hero::after {
+          right: -70px;
+          width: 260px;
+          height: 260px;
+        }
+
+        .hero-glow-left {
+          left: -80px;
+          width: 260px;
+          height: 260px;
         }
 
         .faq-q {
@@ -1342,10 +1522,11 @@
         .cards-3,
         .cards-6,
         .reviews,
+        .sneak-grid,
         .pricing,
         .steps,
         .footer-grid {
-          grid-template-columns: 1fr;
+          grid-template-columns: minmax(0, 1fr);
         }
 
         .hero-logo {
@@ -1471,6 +1652,46 @@
             <p>Real Discord member feedback.</p>
           </div>
           <div class="reviews" id="reviewsGrid"></div>
+        </div>
+      </section>
+
+      <section id="sneak-peek" class="section">
+        <div class="container">
+          <div class="heading center">
+            <p class="section-label">Recent Tip</p>
+            <h2>How The Group Works</h2>
+            <p>We told our members to buy Saelemaekers for 400 coins before he went out of packs.</p>
+          </div>
+          <div class="sneak-grid">
+            <article class="tip-card">
+              <div class="tip-image">
+                <img src="assets/saelemaekers-buy.jpg" alt="Saelemaekers price at 400 coins when the investment was shared" loading="lazy" />
+              </div>
+              <div class="tip-body">
+                <span class="tip-tag">When We Told Members To Buy</span>
+                <h3>Saelemaekers Investment</h3>
+                <div class="tip-lines">
+                  <p>We told members to buy before he went out of packs.</p>
+                  <p>Saelemaekers under 400 on PS/XBOX</p>
+                  <p>Saelemaekers under 400 on PC</p>
+                </div>
+              </div>
+            </article>
+            <article class="tip-card sell-call">
+              <div class="tip-image">
+                <img src="assets/saelemaekers-sell.jpg" alt="Saelemaekers price at 8.3k coins after the sell update" loading="lazy" />
+              </div>
+              <div class="tip-body">
+                <span class="tip-tag">When We Told Members To Sell</span>
+                <h3>Saelemaekers Sell Time</h3>
+                <p class="tip-result">400 -> 8.3K</p>
+                <div class="tip-lines">
+                  <p>Great profits here. Enjoy.</p>
+                  <p>That's a +800k profit per 100 cards.</p>
+                </div>
+              </div>
+            </article>
+          </div>
         </div>
       </section>
 
