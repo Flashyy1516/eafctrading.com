@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Top Level Trading</title>
+    <title>Top Level Trading | Trading Education Community</title>
     <meta
       name="description"
       content="Top Level Trading is a FUT trading community with guides, experienced calls, giveaways and early market trend insights."
@@ -1039,7 +1039,7 @@
 
       @media (max-width: 640px) {
         .container {
-          width: min(100% - 24px, var(--max));
+          width: min(calc(100% - 32px), 430px);
         }
 
         section {
@@ -1106,11 +1106,11 @@
         }
 
         .hero {
-          padding: 118px 0 54px;
+          padding: 108px 0 48px;
         }
 
         .hero-logo {
-          width: min(92vw, 360px);
+          width: min(100%, 340px);
           margin-bottom: 14px;
         }
 
@@ -1133,7 +1133,7 @@
         .cta .hero-actions {
           flex-direction: column;
           width: 100%;
-          max-width: 340px;
+          max-width: 320px;
           margin-inline: auto;
           gap: 10px;
         }
@@ -1156,7 +1156,7 @@
         }
 
         .section {
-          padding: 64px 0;
+          padding: 56px 0;
         }
 
         .heading h2 {
@@ -1325,6 +1325,34 @@
         .faq-a {
           padding: 0 18px 18px;
           font-size: 14px;
+        }
+      }
+
+      @media (hover: none) and (pointer: coarse) {
+        .container {
+          width: min(calc(100% - 32px), 430px);
+        }
+
+        .hero-grid,
+        .split,
+        .cards-3,
+        .cards-6,
+        .reviews,
+        .pricing,
+        .steps,
+        .footer-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-logo {
+          width: min(100%, 340px);
+        }
+
+        .hero-actions,
+        .cta .hero-actions {
+          width: 100%;
+          max-width: 320px;
+          margin-inline: auto;
         }
       }
     </style>
