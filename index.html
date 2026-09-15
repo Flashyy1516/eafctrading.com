@@ -1862,18 +1862,17 @@
 
           const params = new URLSearchParams(window.location.search);
           const referral = params.get("ref");
-          console.log(referral);
           
           notice.classList.remove("show");
           window.sellAuthEmbed.checkout(button, {
             cart: [{
               productId: Number(product.productId),
               variantId: Number(product.variantId),
-              quantity: 1,
-              referral: referral
+              quantity: 1
             }],
             shopId: Number(config.sellauth.shopId),
-            modal: true
+            modal: true,
+            referral: referral
           });
         });
       });
