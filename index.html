@@ -1862,6 +1862,7 @@
 
           const params = new URLSearchParams(window.location.search);
           const referral = params.get("ref");
+          console.log(referral)
           
           notice.classList.remove("show");
           window.sellAuthEmbed.checkout(button, {
